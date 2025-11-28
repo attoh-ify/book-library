@@ -16,6 +16,7 @@ public class AppExceptionMapper implements ExceptionMapper<AppException> {
                 .add("status", "FAILED")
                 .add("message", ex.getMessage())
                 .add("code", ex.getStatusCode())
+                .add("data", ex.getData())
                 .build();
 
         return Response.status(ex.getStatusCode())

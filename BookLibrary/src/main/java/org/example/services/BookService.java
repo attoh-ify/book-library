@@ -34,9 +34,7 @@ public class BookService {
             );
             bookDAO.add(book);
             return book;
-        }
-
-        if (req.getFormat() == Enums.BOOK_FORMAT.EBOOK) {
+        } else if (req.getFormat() == Enums.BOOK_FORMAT.EBOOK) {
             String downloadLink = req.getDownloadLink();
             if (downloadLink == null) {
                 throw new BadRequestException("Download link is required");
@@ -49,7 +47,7 @@ public class BookService {
                     req.getGenre(),
                     req.getFormat(),
                     req.getPrice(),
-                    req.getDownloadLink()
+                    downloadLink
             );
             bookDAO.add(book);
             return book;

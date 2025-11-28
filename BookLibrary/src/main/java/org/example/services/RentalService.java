@@ -10,9 +10,11 @@ import org.example.dtos.rental.ReturnBookResponse;
 import org.example.exceptions.AppException;
 import org.example.exceptions.BadRequestException;
 import org.example.models.*;
+import org.example.utils.JsonUtils;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.json.Json;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -58,7 +60,7 @@ public class RentalService {
         if (usersRentals != null) {
             for (RentalResponse rental : usersRentals) {
                 if (Objects.equals(rental.getBook().getIsbn(), isbn)) {
-                    throw new AppException("You have already rented this book", 400);
+                    throw new BadRequestException("You have already rented this book", JsonUtils.RentalResponseToJson(rental));
                 }
             }
         }
@@ -69,7 +71,7 @@ public class RentalService {
                 (PhysicalBook) book,
                 LocalDateTime.now(),
                 req.getDueDate(),
-                req.getStatus()
+                Enums.RENTAL_STATUS.RENTED
                 );
         rentalDAO.create(rental);
 
@@ -81,6 +83,7 @@ public class RentalService {
 
     public ReturnBookResponse returnBook(ReturnBookRequest req) {
         String rentalId = req.getRentalId();
+        String isbn = req.getIsbn();
         Rental rental = rentalDAO.findById(rentalId);
         if (rental == null) {
             throw new BadRequestException("Rental with the rentalId passed does not exist");
@@ -90,11 +93,15 @@ public class RentalService {
             throw new BadRequestException("Rental with the rentalId passed has already been returned");
         }
 
+        if (!Objects.equals(rental.getBook().getIsbn(), isbn)) {
+            throw new BadRequestException("This is not the book you rented");
+        }
+
         rental.setStatus(Enums.RENTAL_STATUS.RETURNED);
         rental.setReturnedDate(LocalDateTime.now());
         rentalDAO.update(rental);
 
-        bookDAO.incrementBookCount(req.getIsbn());
+        bookDAO.incrementBookCount(isbn);
 
         return new ReturnBookResponse(rentalId, "Book successfully returned");
     }

@@ -1,8 +1,13 @@
 package org.example.exceptions;
 
+import javax.json.JsonObject;
 import javax.ws.rs.core.Response;
 
 public class UnauthorizedException extends AppException {
+    public UnauthorizedException(String message, JsonObject data) {
+        super(message, Response.Status.UNAUTHORIZED.getStatusCode(), data);
+    }
+
     public UnauthorizedException(String message) {
         super(message, Response.Status.UNAUTHORIZED.getStatusCode());
     }

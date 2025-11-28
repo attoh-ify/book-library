@@ -65,12 +65,10 @@ public class BookResponse {
     }
 
     public int getPrice() {
-        return price;
+          return price;
     }
 
-    public int getQuantityAvailable() {
-        return quantityAvailable;
-    }
+    public int getQuantityAvailable() { return quantityAvailable; }
 
     public String getDownloadLink() {
         return downloadLink;

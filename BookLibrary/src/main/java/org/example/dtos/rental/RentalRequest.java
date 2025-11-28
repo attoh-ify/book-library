@@ -8,7 +8,6 @@ public class RentalRequest {
     private String email;
     private String isbn;
     private LocalDateTime dueDate;
-    private Enums.RENTAL_STATUS status;
 
     public RentalRequest() {}
 
@@ -24,10 +23,6 @@ public class RentalRequest {
         return dueDate;
     }
 
-    public Enums.RENTAL_STATUS getStatus() {
-        return status;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -38,9 +33,5 @@ public class RentalRequest {
 
     public void setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
-    }
-
-    public void setStatus(Enums.RENTAL_STATUS status) {
-        this.status = status;
     }
 }

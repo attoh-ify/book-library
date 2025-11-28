@@ -5,9 +5,9 @@ import org.example.dao.PurchaseDAO;
 import org.example.dao.UserDAO;
 import org.example.dtos.purchase.PurchaseRequest;
 import org.example.dtos.purchase.PurchaseResponse;
-import org.example.exceptions.AppException;
 import org.example.exceptions.BadRequestException;
 import org.example.models.*;
+import org.example.utils.JsonUtils;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -49,9 +49,9 @@ public class PurchaseService {
         // Check user has not bought it before
         List<PurchaseResponse> userPurchases = purchaseDAO.purchaseHistory(email);
         if (userPurchases != null) {
-            for (PurchaseResponse rental : userPurchases) {
-                if (Objects.equals(rental.getBook().getIsbn(), isbn)) {
-                    throw new AppException("You have already bought this ebook", 400);
+            for (PurchaseResponse purchase : userPurchases) {
+                if (Objects.equals(purchase.getBook().getIsbn(), isbn)) {
+                    throw new BadRequestException("You have already bought this ebook", JsonUtils.PurchaseResponseToJson(purchase));
                 }
             }
         }
